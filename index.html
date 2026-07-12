@@ -6,28 +6,28 @@
 <title>Patient Data</title>
 <style>
   :root{
-    --ink:#16232E; --paper:#F3F6F7; --card:#FFFFFF;
-    --teal:#0E6E6D; --teal-dark:#0A5453;
-    --steel:#5B7280; --line:#D9E2E6;
-    --amber:#9A6A12; --amber-bg:#FBF3E1;
-    --red:#A63A32; --red-bg:#F9ECEA;
-    --green-bg:#E7F2F0;
+    --ink:#E8F0F3; --paper:#0F1923; --card:#172330;
+    --teal:#1A9E9C; --teal-dark:#148280;
+    --steel:#8AAABB; --line:#243545;
+    --amber:#D4943A; --amber-bg:#2A1F0A;
+    --red:#E06B62; --red-bg:#2A1210;
+    --green-bg:#0D2E2D;
     --mono:'SF Mono','Roboto Mono',Consolas,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-    background:var(--paper);color:var(--ink);font-size:16px;line-height:1.45;padding-bottom:92px}
-  header{background:var(--ink);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:20}
-  header h1{font-size:17px;font-weight:600}
-  header .sub{font-size:12px;color:#9FB3BF;margin-top:2px}
-  header .sub b{color:#CFE0E8}
-  header .credit{font-size:10.5px;color:#7E93A0;margin-top:3px}
+    background:var(--paper);color:var(--ink);font-size:17px;line-height:1.5;padding-bottom:92px}
+  header{background:#0A1118;color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line)}
+  header h1{font-size:18px;font-weight:600}
+  header .sub{font-size:12.5px;color:#5A7A8A;margin-top:2px}
+  header .sub b{color:#7AA0B0}
+  header .credit{font-size:11px;color:#3D5A6A;margin-top:3px}
 
-  nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;background:#fff;
+  nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;background:#0A1118;
     border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
-  nav button{flex:1;background:none;border:none;padding:11px 4px 9px;font-size:12.5px;
-    color:var(--steel);font-weight:600;cursor:pointer;font-family:inherit}
-  nav button .ic{display:block;font-size:19px;margin-bottom:2px}
+  nav button{flex:1;background:none;border:none;padding:11px 4px 9px;font-size:13px;
+    color:#5A7A8A;font-weight:600;cursor:pointer;font-family:inherit}
+  nav button .ic{display:block;font-size:20px;margin-bottom:2px}
   nav button.active{color:var(--teal)}
   nav button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
 
@@ -36,59 +36,59 @@
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
   .pcard{cursor:pointer}
-  .pcard:active{background:#F6FAFA}
+  .pcard:active{background:#1E3040}
   .pcard .row1{display:flex;align-items:center;justify-content:space-between;gap:8px}
   .idchip{font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--teal);
-    background:var(--green-bg);border:1px solid #C4DEDA;border-radius:6px;padding:2px 8px;white-space:nowrap}
-  .pname{font-size:15.5px;font-weight:700;margin-top:7px}
-  .pmeta{font-size:13px;color:var(--steel);margin-top:3px}
-  .badge{font-size:11.5px;font-weight:600;border-radius:20px;padding:2px 9px;white-space:nowrap}
-  .b-ok{background:var(--green-bg);color:var(--teal-dark)}
+    background:var(--green-bg);border:1px solid #1A4040;border-radius:6px;padding:2px 8px;white-space:nowrap}
+  .pname{font-size:16px;font-weight:700;margin-top:7px}
+  .pmeta{font-size:14px;color:var(--steel);margin-top:3px}
+  .badge{font-size:12px;font-weight:600;border-radius:20px;padding:2px 9px;white-space:nowrap}
+  .b-ok{background:var(--green-bg);color:var(--teal)}
   .b-warn{background:var(--amber-bg);color:var(--amber)}
 
-  .empty{text-align:center;color:var(--steel);padding:44px 20px;font-size:14.5px}
+  .empty{text-align:center;color:var(--steel);padding:44px 20px;font-size:15px}
   .empty .big{font-size:34px;display:block;margin-bottom:10px}
 
   fieldset{border:1px solid var(--line);border-radius:12px;background:var(--card);
     padding:12px 14px 14px;margin-bottom:14px;min-width:0}
   legend{font-size:12px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;
     color:var(--teal-dark);padding:0 6px}
-  label{display:block;font-size:13px;font-weight:600;color:#33454F;margin:11px 0 4px}
+  label{display:block;font-size:14px;font-weight:600;color:#A0BEC8;margin:11px 0 4px}
   label .opt{font-weight:400;color:var(--steel)}
   input[type=text],input[type=number],input[type=tel],input[type=date],select,textarea{
     width:100%;padding:10px 11px;font-size:15px;color:var(--ink);
-    border:1px solid #C3D0D6;border-radius:9px;background:#FDFEFE;font-family:inherit}
-  textarea{min-height:64px;resize:vertical}
-  textarea.tall{min-height:110px}
+    border:1px solid var(--line);border-radius:9px;background:#0F1F2E;font-family:inherit}
+  textarea{min-height:70px;resize:vertical}
+  textarea.tall{min-height:120px}
   input:focus,select:focus,textarea:focus{outline:2px solid var(--teal);border-color:var(--teal)}
-  input[readonly]{background:#EFF4F5;color:var(--steel)}
+  input[readonly]{background:#0A1520;color:var(--steel)}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
   .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 10px}
-  .chk{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:14.5px;font-weight:600}
+  .chk{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:15px;font-weight:600}
   .chk input{width:20px;height:20px;accent-color:var(--teal)}
 
-  .btn{display:block;width:100%;padding:13px;font-size:15.5px;font-weight:700;border:none;
+  .btn{display:block;width:100%;padding:14px;font-size:16px;font-weight:700;border:none;
     border-radius:10px;cursor:pointer;font-family:inherit;margin-top:4px}
   .btn-primary{background:var(--teal);color:#fff}
   .btn-primary:active{background:var(--teal-dark)}
   .btn-ghost{background:none;border:1.5px solid var(--line);color:var(--steel);margin-top:10px}
-  .btn-danger{background:none;border:1.5px solid #E4C6C2;color:var(--red);margin-top:10px}
+  .btn-danger{background:none;border:1.5px solid #4A2020;color:var(--red);margin-top:10px}
   .btn-row{display:flex;gap:10px}
   .btn-row .btn{margin-top:10px}
-  .btn-sm{width:auto;display:inline-block;padding:8px 14px;font-size:13.5px;border-radius:8px;margin:0}
+  .btn-sm{width:auto;display:inline-block;padding:8px 14px;font-size:14px;border-radius:8px;margin:0}
 
   .search{width:100%;padding:11px 13px;font-size:15px;border:1px solid var(--line);
     border-radius:10px;margin-bottom:12px;background:#fff}
 
   .detail-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px}
-  .back{background:none;border:none;color:var(--teal);font-size:15px;font-weight:700;
+  .back{background:none;border:none;color:var(--teal);font-size:16px;font-weight:700;
     cursor:pointer;padding:6px 0;font-family:inherit}
-  dl{display:grid;grid-template-columns:44% 56%;row-gap:7px;font-size:14px}
+  dl{display:grid;grid-template-columns:44% 56%;row-gap:8px;font-size:14.5px}
   dt{color:var(--steel)}
   dd{font-weight:600;word-break:break-word;white-space:pre-wrap}
   .sechead{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}
-  .sechead h3{font-size:12.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--teal-dark)}
-  .sechead .cnt{font-family:var(--mono);font-size:11.5px;color:var(--steel);font-weight:400;margin-left:6px}
+  .sechead h3{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--teal)}
+  .sechead .cnt{font-family:var(--mono);font-size:12px;color:var(--steel);font-weight:400;margin-left:6px}
   .addbtn{background:var(--green-bg);border:1px solid #C4DEDA;color:var(--teal-dark);
     font-size:13px;font-weight:700;border-radius:8px;padding:6px 12px;cursor:pointer;font-family:inherit}
 
@@ -96,39 +96,69 @@
     border-radius:0 10px 10px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);
     border-bottom:1px solid var(--line)}
   .entry .etop{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-  .entry .edate{font-family:var(--mono);font-size:12px;color:var(--steel)}
-  .entry .etitle{font-size:14.5px;font-weight:700}
-  .entry p{font-size:13.5px;margin-top:4px;white-space:pre-wrap}
-  .entry p b{color:#33454F}
+  .entry .edate{font-family:var(--mono);font-size:12.5px;color:var(--steel)}
+  .entry .etitle{font-size:15px;font-weight:700}
+  .entry p{font-size:14px;margin-top:4px;white-space:pre-wrap}
+  .entry p b{color:#A0BEC8}
   .entry .eacts{margin-top:7px;display:flex;gap:16px}
   .entry .eacts button{background:none;border:none;font-size:12.5px;font-weight:700;
     cursor:pointer;padding:2px 0;font-family:inherit}
   .entry .e-edit{color:var(--teal)}
   .entry .e-del{color:var(--red)}
-  .thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer;display:block}
+  .thumb{width:68px;height:68px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer;display:block}
   .thumbrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
   .thumbbox{display:inline-block;margin:8px 10px 0 0;text-align:center}
 
-  .note{font-size:13px;color:var(--steel);background:#EDF3F4;border-radius:10px;padding:10px 12px;margin-bottom:12px}
+  .note{font-size:14px;color:var(--steel);background:#111F2C;border-radius:10px;padding:10px 13px;border:1px solid var(--line);margin-bottom:12px}
   .note b{color:var(--ink)}
-  .banner-warn{font-size:13px;background:var(--amber-bg);color:var(--amber);border-radius:10px;
-    padding:10px 12px;margin-bottom:12px;font-weight:600}
-  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink);
-    color:#fff;font-size:14px;padding:10px 18px;border-radius:24px;z-index:60;opacity:0;
+  .banner-warn{font-size:14px;background:var(--amber-bg);color:var(--amber);border-radius:10px;
+    padding:10px 13px;margin-bottom:12px;font-weight:600;border:1px solid #3A2A0A}
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1A9E9C;
+    color:#fff;font-size:14.5px;font-weight:600;padding:11px 20px;border-radius:24px;z-index:60;opacity:0;
     transition:opacity .25s;pointer-events:none;max-width:88%;text-align:center}
   .toast.show{opacity:1}
-  .stat{font-family:var(--mono);font-size:13px;color:var(--steel);line-height:1.7}
-  h2.vtitle{font-size:18px;margin-bottom:12px}
+  .stat{font-family:var(--mono);font-size:13.5px;color:var(--steel);line-height:1.8}
+  h2.vtitle{font-size:19px;margin-bottom:12px}
   .imgwrap{margin-top:8px}
   .imgwrap .rm{background:none;border:none;color:var(--red);font-size:12.5px;font-weight:700;
     cursor:pointer;font-family:inherit;padding:4px 0;display:block}
-  .overlay{position:fixed;inset:0;background:rgba(10,18,24,.93);z-index:100;display:none;
+  .overlay{position:fixed;inset:0;background:rgba(5,10,15,.96);z-index:100;display:none;
     align-items:center;justify-content:center;padding:14px}
   .overlay.show{display:flex}
   .overlay img{max-width:100%;max-height:92vh;border-radius:8px}
   .exgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-  .exgrid .btn{margin:0;padding:11px 8px;font-size:13.5px}
+  .exgrid .btn{margin:0;padding:11px 8px;font-size:14px}
   @media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+  /* ---- PIN lock ---- */
+  .pin-overlay{position:fixed;inset:0;background:#0A1118;z-index:200;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;padding:30px}
+  .pin-overlay h2{color:#fff;font-size:22px;margin-bottom:6px}
+  .pin-overlay .pinsub{color:#7E93A0;font-size:13px;margin-bottom:32px;text-align:center}
+  .pin-dots{display:flex;gap:14px;margin-bottom:28px}
+  .pin-dot{width:18px;height:18px;border-radius:50%;border:2px solid #4A6070;background:transparent;transition:background .15s}
+  .pin-dot.filled{background:var(--teal);border-color:var(--teal)}
+  .pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:280px}
+  .pin-btn{background:#1E3040;border:none;color:#fff;font-size:24px;font-weight:600;
+    border-radius:14px;padding:20px 10px;cursor:pointer;font-family:inherit;transition:background .1s}
+  .pin-btn:active{background:var(--teal)}
+  .pin-err{color:#E87E77;font-size:13.5px;margin-top:14px;min-height:20px;font-weight:600}
+
+  /* ---- Login screen ---- */
+  .login-overlay{position:fixed;inset:0;background:#0A1118;z-index:190;display:none;
+    flex-direction:column;align-items:center;justify-content:center;padding:30px}
+  .login-overlay.show{display:flex}
+  .login-overlay h2{color:#fff;font-size:22px;margin-bottom:6px}
+  .login-overlay .loginsub{color:#7E93A0;font-size:13px;margin-bottom:32px;text-align:center}
+  .login-overlay input{width:100%;max-width:280px;padding:13px 14px;font-size:16px;
+    border-radius:10px;border:1.5px solid #2E4A5A;background:#1E3040;color:#fff;
+    font-family:inherit;margin-bottom:12px}
+  .login-overlay input:focus{outline:2px solid var(--teal);border-color:var(--teal)}
+  .login-overlay input::placeholder{color:#4A6070}
+  .login-btn{width:100%;max-width:280px;padding:14px;font-size:16px;font-weight:700;
+    background:var(--teal);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit}
+  .login-btn:active{background:var(--teal-dark)}
+  .login-err{color:#E87E77;font-size:13.5px;margin-top:12px;min-height:20px;font-weight:600}
 </style>
 </head>
 <body>
@@ -138,6 +168,41 @@
   <div class="sub"><b id="hCount">0</b> patients &middot; stored on this device only</div>
   <div class="credit">Designed by Dr. Sofyan Hussein Khalid El-Khatib — Senior Specialist in Surgical Oncology, Jordanian Royal Medical Services</div>
 </header>
+
+<div class="pin-overlay" id="pinOverlay">
+  <h2>Patient Data</h2>
+  <div class="pinsub">Designed by Dr. Sofyan Hussein Khalid El-Khatib<br>Enter PIN to continue</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinPress('C')" style="font-size:16px">Clear</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinPress('B')" style="font-size:18px">⌫</button>
+  </div>
+  <div class="pin-err" id="pinErr"></div>
+</div>
+
+<div class="login-overlay" id="loginOverlay">
+  <h2>Patient Data</h2>
+  <div class="loginsub">Designed by Dr. Sofyan Hussein Khalid El-Khatib<br>Jordanian Royal Medical Services<br><br>Please sign in to continue</div>
+  <input type="text" id="login_user" placeholder="Username" autocomplete="username" autocorrect="off" autocapitalize="none">
+  <input type="password" id="login_pass" placeholder="Password" autocomplete="current-password">
+  <button class="login-btn" onclick="doLogin()">Sign in</button>
+  <div class="login-err" id="loginErr"></div>
+</div>
 
 <main>
 
@@ -247,16 +312,11 @@
     </div>
   </div>
   <div class="card">
-    <div class="sechead" style="margin-top:0"><h3>Google Drive backup</h3><span id="gdStatus"></span></div>
+    <div class="sechead" style="margin-top:0"><h3>Google Drive backup</h3></div>
     <p style="font-size:13.5px;color:var(--steel);margin-bottom:10px">Backups are saved in your Google Drive inside a folder named <b>Patient Data Backups</b>. Each file is named with the date of that backup, e.g. <b>12-Jul-26_PatientData.backup</b>.</p>
     <button class="btn btn-primary" onclick="gdBackup()">Backup to Google Drive</button>
     <button class="btn btn-primary" style="margin-top:10px" onclick="gdRestore()">Restore from Google Drive</button>
     <div id="gdList"></div>
-    <div id="gdSetup" style="margin-top:14px">
-      <label>Connection link <span class="opt">(one-time setup — see instructions)</span></label>
-      <input type="text" id="gd_url" placeholder="Paste your Google connection link here">
-      <button class="btn btn-ghost" onclick="gdSaveUrl()">Save connection link</button>
-    </div>
   </div>
   <div class="card">
     <div class="sechead" style="margin-top:0"><h3>Phone backup (offline fallback)</h3></div>
@@ -283,6 +343,49 @@
 
 <script>
 'use strict';
+/* ---- hardcoded Google Drive script URL ---- */
+var GD_URL='https://script.google.com/macros/s/AKfycbxPIahNvIE95yjgp1cR_WhEr3VCqI-H4rqrextz2Ja8KHPpRlXaY95LiR5mMJDL-TUenQ/exec';
+
+/* ---- PIN lock ---- */
+var PIN_CORRECT='2501', pinEntry='';
+function pinPress(k){
+  if(k==='C'){pinEntry='';updateDots();return;}
+  if(k==='B'){pinEntry=pinEntry.slice(0,-1);updateDots();return;}
+  if(pinEntry.length>=4)return;
+  pinEntry+=k;updateDots();
+  if(pinEntry.length===4){
+    if(pinEntry===PIN_CORRECT){
+      $('pinOverlay').style.display='none';
+      $('loginOverlay').classList.add('show');
+      setTimeout(function(){$('login_user').focus();},200);
+      $('pinErr').textContent='';
+    }else{
+      $('pinErr').textContent='Incorrect PIN — try again';
+      setTimeout(function(){pinEntry='';updateDots();},700);
+    }
+  }
+}
+function updateDots(){
+  for(var i=0;i<4;i++)$('pd'+i).classList.toggle('filled',i<pinEntry.length);
+}
+/* ---- Login ---- */
+var LOGIN_USER='sofyan', LOGIN_PASS='2501';
+function doLogin(){
+  var u=$('login_user').value.trim().toLowerCase();
+  var p=$('login_pass').value;
+  if(u===LOGIN_USER&&p===LOGIN_PASS){
+    $('loginOverlay').classList.remove('show');
+    $('loginErr').textContent='';
+  }else{
+    $('loginErr').textContent='Incorrect username or password';
+    $('login_pass').value='';
+    setTimeout(function(){$('loginErr').textContent='';},2000);
+  }
+}
+/* allow pressing Enter on login fields */
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&$('loginOverlay').classList.contains('show'))doLogin();
+});
 /* ================= data model ================= */
 var DB={version:2, patients:[]};
 var memOnly=false, idb=null;
@@ -768,25 +871,13 @@ function exportAllCSV(){
 }
 
 /* ---- Google Drive backup & restore ---- */
-function renderGD(){
-  $('gd_url').value=DB.gdUrl||'';
-  $('gdStatus').innerHTML=DB.gdUrl
-    ?'<span class="badge b-ok">Connected</span>'
-    :'<span class="badge b-warn">Not set up</span>';
-}
-function gdSaveUrl(){
-  var u=$('gd_url').value.trim();
-  if(!u){DB.gdUrl='';persist();renderGD();toast('Connection link removed');return;}
-  if(!/^https:\/\/script\.google\.com\/macros\/.+\/exec$/.test(u)){
-    alert('That does not look like a valid connection link. It should start with https://script.google.com/macros/ and end with /exec');return;}
-  DB.gdUrl=u;persist();renderGD();toast('Google Drive connected');
-}
+function renderGD(){}
+function gdSaveUrl(){}
 function gdBackup(){
-  if(!DB.gdUrl){alert('Google Drive is not set up yet.\n\nPaste your connection link in the box below first (one-time step).');return;}
   if(!confirm('Are you sure you want to backup all data to Google Drive now?'))return;
   toast('Uploading backup\u2026');
   var name=fmtDate()+'_PatientData.backup';
-  fetch(DB.gdUrl,{method:'POST',headers:{'Content-Type':'text/plain'},
+  fetch(GD_URL,{method:'POST',headers:{'Content-Type':'text/plain'},
     body:JSON.stringify({action:'save',name:name,data:JSON.stringify(DB)})})
   .then(function(r){return r.json();})
   .then(function(res){
@@ -796,10 +887,9 @@ function gdBackup(){
   .catch(function(){toast('No connection — backup failed');});
 }
 function gdRestore(){
-  if(!DB.gdUrl){alert('Google Drive is not set up yet.\n\nPaste your connection link in the box below first (one-time step).');return;}
-  if(!confirm('Are you sure you want to restore from Google Drive?\n\nThe data currently on this phone will be replaced by the backup you choose.'))return;
+  if(!confirm('Are you sure you want to restore from Google Drive?\n\nThe data currently on this device will be replaced by the backup you choose.'))return;
   toast('Loading backup list\u2026');
-  fetch(DB.gdUrl+'?action=list')
+  fetch(GD_URL+'?action=list')
   .then(function(r){return r.json();})
   .then(function(res){
     var files=(res&&res.files)||[];
@@ -815,7 +905,7 @@ function gdRestore(){
 }
 function gdFetch(id,name){
   toast('Downloading '+name+'\u2026');
-  fetch(DB.gdUrl+'?id='+encodeURIComponent(id))
+  fetch(GD_URL+'?id='+encodeURIComponent(id))
   .then(function(r){return r.text();})
   .then(function(txt){applyBackup(txt,name);})
   .catch(function(){toast('Download failed');});
