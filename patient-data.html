@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Patient Data</title>
+<style>
+  :root{
+    --ink:#16232E; --paper:#F3F6F7; --card:#FFFFFF;
+    --teal:#0E6E6D; --teal-dark:#0A5453;
+    --steel:#5B7280; --line:#D9E2E6;
+    --amber:#9A6A12; --amber-bg:#FBF3E1;
+    --red:#A63A32; --red-bg:#F9ECEA;
+    --green-bg:#E7F2F0;
+    --mono:'SF Mono','Roboto Mono',Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    background:var(--paper);color:var(--ink);font-size:16px;line-height:1.45;padding-bottom:92px}
+  header{background:var(--ink);color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:20}
+  header h1{font-size:17px;font-weight:600}
+  header .sub{font-size:12px;color:#9FB3BF;margin-top:2px}
+  header .sub b{color:#CFE0E8}
+  header .credit{font-size:10.5px;color:#7E93A0;margin-top:3px}
+
+  nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;background:#fff;
+    border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+  nav button{flex:1;background:none;border:none;padding:11px 4px 9px;font-size:12.5px;
+    color:var(--steel);font-weight:600;cursor:pointer;font-family:inherit}
+  nav button .ic{display:block;font-size:19px;margin-bottom:2px}
+  nav button.active{color:var(--teal)}
+  nav button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+
+  main{padding:14px 14px 20px;max-width:640px;margin:0 auto}
+  .view{display:none}.view.active{display:block}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px}
+  .pcard{cursor:pointer}
+  .pcard:active{background:#F6FAFA}
+  .pcard .row1{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .idchip{font-family:var(--mono);font-size:13.5px;font-weight:700;color:var(--teal);
+    background:var(--green-bg);border:1px solid #C4DEDA;border-radius:6px;padding:2px 8px;white-space:nowrap}
+  .pname{font-size:15.5px;font-weight:700;margin-top:7px}
+  .pmeta{font-size:13px;color:var(--steel);margin-top:3px}
+  .badge{font-size:11.5px;font-weight:600;border-radius:20px;padding:2px 9px;white-space:nowrap}
+  .b-ok{background:var(--green-bg);color:var(--teal-dark)}
+  .b-warn{background:var(--amber-bg);color:var(--amber)}
+
+  .empty{text-align:center;color:var(--steel);padding:44px 20px;font-size:14.5px}
+  .empty .big{font-size:34px;display:block;margin-bottom:10px}
+
+  fieldset{border:1px solid var(--line);border-radius:12px;background:var(--card);
+    padding:12px 14px 14px;margin-bottom:14px;min-width:0}
+  legend{font-size:12px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;
+    color:var(--teal-dark);padding:0 6px}
+  label{display:block;font-size:13px;font-weight:600;color:#33454F;margin:11px 0 4px}
+  label .opt{font-weight:400;color:var(--steel)}
+  input[type=text],input[type=number],input[type=tel],input[type=date],select,textarea{
+    width:100%;padding:10px 11px;font-size:15px;color:var(--ink);
+    border:1px solid #C3D0D6;border-radius:9px;background:#FDFEFE;font-family:inherit}
+  textarea{min-height:64px;resize:vertical}
+  textarea.tall{min-height:110px}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--teal);border-color:var(--teal)}
+  input[readonly]{background:#EFF4F5;color:var(--steel)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 10px}
+  .chk{display:flex;align-items:center;gap:9px;margin-top:12px;font-size:14.5px;font-weight:600}
+  .chk input{width:20px;height:20px;accent-color:var(--teal)}
+
+  .btn{display:block;width:100%;padding:13px;font-size:15.5px;font-weight:700;border:none;
+    border-radius:10px;cursor:pointer;font-family:inherit;margin-top:4px}
+  .btn-primary{background:var(--teal);color:#fff}
+  .btn-primary:active{background:var(--teal-dark)}
+  .btn-ghost{background:none;border:1.5px solid var(--line);color:var(--steel);margin-top:10px}
+  .btn-danger{background:none;border:1.5px solid #E4C6C2;color:var(--red);margin-top:10px}
+  .btn-row{display:flex;gap:10px}
+  .btn-row .btn{margin-top:10px}
+  .btn-sm{width:auto;display:inline-block;padding:8px 14px;font-size:13.5px;border-radius:8px;margin:0}
+
+  .search{width:100%;padding:11px 13px;font-size:15px;border:1px solid var(--line);
+    border-radius:10px;margin-bottom:12px;background:#fff}
+
+  .detail-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px}
+  .back{background:none;border:none;color:var(--teal);font-size:15px;font-weight:700;
+    cursor:pointer;padding:6px 0;font-family:inherit}
+  dl{display:grid;grid-template-columns:44% 56%;row-gap:7px;font-size:14px}
+  dt{color:var(--steel)}
+  dd{font-weight:600;word-break:break-word;white-space:pre-wrap}
+  .sechead{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}
+  .sechead h3{font-size:12.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--teal-dark)}
+  .sechead .cnt{font-family:var(--mono);font-size:11.5px;color:var(--steel);font-weight:400;margin-left:6px}
+  .addbtn{background:var(--green-bg);border:1px solid #C4DEDA;color:var(--teal-dark);
+    font-size:13px;font-weight:700;border-radius:8px;padding:6px 12px;cursor:pointer;font-family:inherit}
+
+  .entry{border-left:3px solid var(--teal);padding:9px 12px;margin-bottom:8px;background:var(--card);
+    border-radius:0 10px 10px 0;border-top:1px solid var(--line);border-right:1px solid var(--line);
+    border-bottom:1px solid var(--line)}
+  .entry .etop{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+  .entry .edate{font-family:var(--mono);font-size:12px;color:var(--steel)}
+  .entry .etitle{font-size:14.5px;font-weight:700}
+  .entry p{font-size:13.5px;margin-top:4px;white-space:pre-wrap}
+  .entry p b{color:#33454F}
+  .entry .eacts{margin-top:7px;display:flex;gap:16px}
+  .entry .eacts button{background:none;border:none;font-size:12.5px;font-weight:700;
+    cursor:pointer;padding:2px 0;font-family:inherit}
+  .entry .e-edit{color:var(--teal)}
+  .entry .e-del{color:var(--red)}
+  .thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:pointer;display:block}
+  .thumbrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .thumbbox{display:inline-block;margin:8px 10px 0 0;text-align:center}
+
+  .note{font-size:13px;color:var(--steel);background:#EDF3F4;border-radius:10px;padding:10px 12px;margin-bottom:12px}
+  .note b{color:var(--ink)}
+  .banner-warn{font-size:13px;background:var(--amber-bg);color:var(--amber);border-radius:10px;
+    padding:10px 12px;margin-bottom:12px;font-weight:600}
+  .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink);
+    color:#fff;font-size:14px;padding:10px 18px;border-radius:24px;z-index:60;opacity:0;
+    transition:opacity .25s;pointer-events:none;max-width:88%;text-align:center}
+  .toast.show{opacity:1}
+  .stat{font-family:var(--mono);font-size:13px;color:var(--steel);line-height:1.7}
+  h2.vtitle{font-size:18px;margin-bottom:12px}
+  .imgwrap{margin-top:8px}
+  .imgwrap .rm{background:none;border:none;color:var(--red);font-size:12.5px;font-weight:700;
+    cursor:pointer;font-family:inherit;padding:4px 0;display:block}
+  .overlay{position:fixed;inset:0;background:rgba(10,18,24,.93);z-index:100;display:none;
+    align-items:center;justify-content:center;padding:14px}
+  .overlay.show{display:flex}
+  .overlay img{max-width:100%;max-height:92vh;border-radius:8px}
+  .exgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  .exgrid .btn{margin:0;padding:11px 8px;font-size:13.5px}
+  @media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Patient Data</h1>
+  <div class="sub"><b id="hCount">0</b> patients &middot; stored on this device only</div>
+  <div class="credit">Designed by Dr. Sofyan Hussein Khalid El-Khatib — Senior Specialist in Surgical Oncology, Jordanian Royal Medical Services</div>
+</header>
+
+<main>
+
+<!-- ================= PATIENT LIST ================= -->
+<section id="view-list" class="view active">
+  <input type="text" id="search" class="search" placeholder="Search name, ID, or phone&hellip;" oninput="renderList()">
+  <div id="plist"></div>
+</section>
+
+<!-- ================= PROFILE FORM (new / edit) ================= -->
+<section id="view-profile" class="view">
+  <h2 class="vtitle" id="profTitle">New patient</h2>
+  <div class="note">Enter patient data.</div>
+
+  <fieldset>
+    <legend>Identity &amp; contact</legend>
+    <label>Patient name <span class="opt">(letters only — Arabic or English)</span></label>
+    <input type="text" id="p_name" oninput="filterLetters(this)">
+    <label>Patient ID <span class="opt">(numbers only)</span></label>
+    <input type="text" id="p_pid" inputmode="numeric" oninput="filterDigits(this)">
+    <label>Phone number</label>
+    <input type="tel" id="p_phone" inputmode="tel">
+  </fieldset>
+
+  <fieldset>
+    <legend>Demographics</legend>
+    <div class="grid2">
+      <div><label>Age (years)</label><input type="number" id="p_age" min="0" max="120" inputmode="numeric"></div>
+      <div><label>Sex</label><select id="p_sex"><option value=""></option><option>Male</option><option>Female</option></select></div>
+    </div>
+    <div class="grid3">
+      <div><label>Weight (kg)</label><input type="number" id="p_wt" min="0" step="0.1" inputmode="decimal" oninput="calcBMI()"></div>
+      <div><label>Height (cm)</label><input type="number" id="p_ht" min="0" step="0.1" inputmode="decimal" oninput="calcBMI()"></div>
+      <div><label>BMI</label><input type="text" id="p_bmi" readonly></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Diagnosis</legend>
+    <label>Diagnosis</label><input type="text" id="p_dx">
+    <div class="chk"><input type="checkbox" id="p_dxc"><label for="p_dxc" style="margin:0">Diagnosis confirmed</label></div>
+    <label>Site / organ</label>
+    <select id="p_site" onchange="siteChanged()"></select>
+    <div id="siteOtherWrap" style="display:none">
+      <label>Specify other site</label><input type="text" id="p_siteOther">
+    </div>
+    <label>Clinical stage <span class="opt">(optional)</span></label><input type="text" id="p_stage">
+  </fieldset>
+
+  <fieldset>
+    <legend>History</legend>
+    <label>Comorbidities</label><input type="text" id="p_comorb" placeholder="e.g., DM, HTN, IHD">
+    <label>Brief history</label><textarea id="p_hx" class="tall"></textarea>
+    <label>Neoadjuvant therapy</label>
+    <select id="p_neo"><option value=""></option><option>None</option><option>Chemotherapy</option><option>Radiotherapy</option><option>Chemoradiation</option><option>Other</option></select>
+    <label>Neoadjuvant details <span class="opt">(optional)</span></label><input type="text" id="p_neodet">
+    <label>Allergies &amp; drug history</label><textarea id="p_allergy"></textarea>
+  </fieldset>
+
+  <button class="btn btn-primary" onclick="saveProfile()">Save patient</button>
+  <button class="btn btn-ghost" onclick="cancelProfile()">Cancel</button>
+</section>
+
+<!-- ================= PATIENT DETAIL ================= -->
+<section id="view-detail" class="view">
+  <div class="detail-top">
+    <button class="back" onclick="showView('list')">&larr; All patients</button>
+    <span class="idchip" id="d_chip"></span>
+  </div>
+  <div id="d_profile"></div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="editProfile()">Edit profile</button>
+    <button class="btn btn-danger" onclick="deletePatient()">Delete patient</button>
+  </div>
+  <div id="d_sections"></div>
+</section>
+
+<!-- ================= ENTRY FORM (generic) ================= -->
+<section id="view-entry" class="view">
+  <div class="detail-top">
+    <button class="back" onclick="cancelEntry()">&larr; Back to patient</button>
+    <span class="idchip" id="e_chip"></span>
+  </div>
+  <h2 class="vtitle" id="entryTitle"></h2>
+  <fieldset><legend id="entryLegend"></legend><div id="entryFields"></div></fieldset>
+  <button class="btn btn-primary" onclick="saveEntry()">Save</button>
+  <button class="btn btn-ghost" onclick="cancelEntry()">Cancel</button>
+</section>
+
+<!-- ================= DATA ================= -->
+<section id="view-data" class="view">
+  <h2 class="vtitle">Data &amp; backup</h2>
+  <div id="storageWarn"></div>
+  <div class="card">
+    <div class="sechead" style="margin-top:0"><h3>Export CSV (opens in Excel)</h3></div>
+    <p style="font-size:13.5px;color:var(--steel)">Each file is keyed by Patient ID and name code. All fields included. Report images are included in the Google Drive backup, not in CSV.</p>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="exportAllCSV()">Export ALL data (one CSV)</button>
+    <div class="exgrid">
+      <button class="btn btn-primary" onclick="exportCSV('patients')">Patients</button>
+      <button class="btn btn-primary" onclick="exportCSV('ops')">Operations</button>
+      <button class="btn btn-primary" onclick="exportCSV('labs')">Laboratory</button>
+      <button class="btn btn-primary" onclick="exportCSV('rad')">Radiology</button>
+      <button class="btn btn-primary" onclick="exportCSV('endo')">Endoscopy</button>
+      <button class="btn btn-primary" onclick="exportCSV('path')">Pathology</button>
+      <button class="btn btn-primary" onclick="exportCSV('mdt')">MDT</button>
+      <button class="btn btn-primary" onclick="exportCSV('visits')">Follow-up visits</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sechead" style="margin-top:0"><h3>Google Drive backup</h3><span id="gdStatus"></span></div>
+    <p style="font-size:13.5px;color:var(--steel);margin-bottom:10px">Backups are saved in your Google Drive inside a folder named <b>Patient Data Backups</b>. Each file is named with the date of that backup, e.g. <b>12-Jul-26_PatientData.backup</b>.</p>
+    <button class="btn btn-primary" onclick="gdBackup()">Backup to Google Drive</button>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="gdRestore()">Restore from Google Drive</button>
+    <div id="gdList"></div>
+    <div id="gdSetup" style="margin-top:14px">
+      <label>Connection link <span class="opt">(one-time setup — see instructions)</span></label>
+      <input type="text" id="gd_url" placeholder="Paste your Google connection link here">
+      <button class="btn btn-ghost" onclick="gdSaveUrl()">Save connection link</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="sechead" style="margin-top:0"><h3>Phone backup (offline fallback)</h3></div>
+    <p style="font-size:13.5px;color:var(--steel);margin-bottom:10px">Works without internet — saves the backup file to this phone&rsquo;s Downloads.</p>
+    <div class="btn-row">
+      <button class="btn btn-ghost" style="margin-top:0" onclick="exportLocal()">Save to phone</button>
+      <button class="btn btn-ghost" style="margin-top:0" onclick="document.getElementById('importFile').click()">Restore from file</button>
+    </div>
+    <input type="file" id="importFile" accept=".backup,.json,application/json,text/plain" style="display:none" onchange="importLocal(event)">
+  </div>
+  <div class="card"><div class="stat" id="stats"></div></div>
+</section>
+
+</main>
+
+<nav>
+  <button id="tab-list" class="active" onclick="showView('list')"><span class="ic">&#9776;</span>Patients</button>
+  <button id="tab-new" onclick="newPatient()"><span class="ic">&#43;</span>New</button>
+  <button id="tab-data" onclick="showView('data')"><span class="ic">&#8681;</span>Data</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+<div class="overlay" id="overlay" onclick="this.classList.remove('show')"><img id="overlayImg" alt="report image"></div>
+
+<script>
+'use strict';
+/* ================= data model ================= */
+var DB={version:2, patients:[]};
+var memOnly=false, idb=null;
+var editingPatient=null;   /* index when editing profile, null = new */
+var detailIdx=null;        /* current patient in detail view       */
+var entryCtx=null;         /* {sec, idx|null} for entry form        */
+
+/* ================= section configs ================= */
+var SEC=[
+ {key:'ops', title:'Operations', single:'operation',
+  fields:[
+   {k:'name', l:'Name of the operation', t:'text'},
+   {k:'date', l:'Date', t:'date'},
+   {k:'approach', l:'Approach', t:'select', o:['','Open','Laparoscopic','Robotic','Converted','Other']},
+   {k:'findings', l:'Operative findings', opt:1, t:'textarea'}],
+  head:function(e){return e.name||'Operation';}},
+
+ {key:'labs', title:'Laboratory', single:'lab result',
+  fields:[
+   {k:'date', l:'Date', t:'date'},
+   {k:'markers', l:'High tumor markers', t:'textarea'},
+   {k:'abnormal', l:'Other abnormal laboratory tests', t:'textarea'}],
+  head:function(e){return 'Laboratory';}},
+
+ {key:'rad', title:'Radiology', single:'radiology study', img:1,
+  fields:[
+   {k:'type', l:'Study', t:'select', o:['','U/S','CT','MRI','Other imaging']},
+   {k:'date', l:'Date', t:'date'},
+   {k:'findings', l:'Findings', t:'textarea'}],
+  head:function(e){return e.type||'Radiology';}},
+
+ {key:'endo', title:'Endoscopy', single:'endoscopy', img:1,
+  fields:[
+   {k:'type', l:'Procedure', t:'select', o:['','Upper endoscopy','Lower endoscopy','EUS','ERCP']},
+   {k:'date', l:'Date', t:'date'},
+   {k:'findings', l:'Findings', t:'textarea'}],
+  head:function(e){return e.type||'Endoscopy';}},
+
+ {key:'path', title:'Pathology', single:'pathology result', img:1,
+  fields:[
+   {k:'date', l:'Date', t:'date'},
+   {k:'result', l:'Final pathology result', t:'textarea'},
+   {k:'stage', l:'Stage', t:'text'},
+   {k:'margin', l:'Margin', t:'select', o:['','R0','R1','R2','N/A']},
+   {k:'nodes', l:'Number of nodes positive', t:'number'}],
+  head:function(e){return 'Pathology';}},
+
+ {key:'mdt', title:'MDT', single:'MDT result',
+  fields:[
+   {k:'date', l:'Date', t:'date'},
+   {k:'result', l:'MDT result / decision', t:'textarea'}],
+  head:function(e){return 'MDT';}},
+
+ {key:'visits', title:'Follow-up visits', single:'follow-up visit',
+  fields:[
+   {k:'date', l:'Date of visit', t:'date'},
+   {k:'cause', l:'Cause of visit', t:'select', o:['','Routine follow up','Other']},
+   {k:'causeDet', l:'If other, specify', opt:1, t:'text'},
+   {k:'complaint', l:'New complaint', t:'textarea'},
+   {k:'newLabs', l:'New change in labs result', t:'textarea'},
+   {k:'newRad', l:'New radiology', t:'textarea'},
+   {k:'plan', l:'Plan after visit', t:'textarea'}],
+  head:function(e){return e.cause==='Other'?(e.causeDet||'Visit'):(e.cause||'Visit');}}
+];
+function secByKey(k){for(var i=0;i<SEC.length;i++)if(SEC[i].key===k)return SEC[i];}
+
+/* ================= storage (IndexedDB, fallback localStorage) ================= */
+function openIDB(cb){
+  if(!window.indexedDB){cb(false);return;}
+  try{
+    var req=indexedDB.open('patientdata',1);
+    req.onupgradeneeded=function(){req.result.createObjectStore('kv');};
+    req.onsuccess=function(){idb=req.result;cb(true);};
+    req.onerror=function(){cb(false);};
+  }catch(e){cb(false);}
+}
+function persist(){
+  if(idb){
+    try{
+      var tx=idb.transaction('kv','readwrite');
+      tx.objectStore('kv').put(DB,'db');
+      tx.onerror=function(){fallbackPersist();};
+    }catch(e){fallbackPersist();}
+  }else fallbackPersist();
+}
+function fallbackPersist(){
+  try{localStorage.setItem('patientdata_v2',JSON.stringify(DB));memOnly=false;}
+  catch(e){memOnly=true;warnStorage();}
+}
+function load(cb){
+  openIDB(function(ok){
+    if(ok){
+      try{
+        var tx=idb.transaction('kv','readonly');
+        var g=tx.objectStore('kv').get('db');
+        g.onsuccess=function(){
+          if(g.result&&g.result.patients)DB=g.result;
+          else{try{var raw=localStorage.getItem('patientdata_v2');if(raw)DB=JSON.parse(raw);}catch(e){}}
+          cb();
+        };
+        g.onerror=function(){cb();};
+        return;
+      }catch(e){}
+    }
+    idb=null;
+    try{var raw=localStorage.getItem('patientdata_v2');if(raw)DB=JSON.parse(raw);}
+    catch(e){memOnly=true;}
+    cb();
+  });
+}
+function warnStorage(){
+  var w=document.getElementById('storageWarn');
+  w.innerHTML=memOnly?'<div class="banner-warn">&#9888; This browser is not saving data between sessions. Entries are in memory only — download a JSON backup before closing, and restore it when you reopen.</div>':'';
+}
+
+/* ================= helpers ================= */
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('show');
+  clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('show');},2200);}
+function today(){return new Date().toISOString().slice(0,10);}
+function filterLetters(el){el.value=el.value.replace(/[^A-Za-z\u0600-\u06FF\s]/g,'');}
+function filterDigits(el){el.value=el.value.replace(/\D/g,'');}
+function calcBMI(){
+  var w=parseFloat($('p_wt').value),h=parseFloat($('p_ht').value)/100;
+  $('p_bmi').value=(w>0&&h>0)?(w/(h*h)).toFixed(1):'';
+}
+function ensureSections(p){SEC.forEach(function(s){if(!p[s.key])p[s.key]=[];});}
+function migrate(p){SEC.forEach(function(s){(p[s.key]||[]).forEach(function(e){
+  if(e.img){e.imgs=[e.img];delete e.img;}});});}
+
+/* ---- site / organ dropdown ---- */
+var ORGANS=['Adrenal gland','Anus / anal canal','Appendix','Bile ducts','Breast','Colon','Duodenum','Esophagus','Gallbladder','Kidney','Liver','Lung','Lymph nodes','Ovary','Pancreas','Parathyroid','Peritoneum','Prostate','Rectum','Retroperitoneum','Salivary glands','Skin','Small intestine','Soft tissue / abdominal wall','Spleen','Stomach','Testis','Thyroid','Urinary bladder','Uterus'];
+function populateSite(){
+  var s=$('p_site'),html='<option value=""></option>';
+  ORGANS.forEach(function(o){html+='<option>'+o+'</option>';});
+  html+='<option>Other</option>';
+  s.innerHTML=html;
+}
+function siteChanged(){
+  $('siteOtherWrap').style.display=$('p_site').value==='Other'?'block':'none';
+}
+function setSiteSelect(v){
+  if(!v){$('p_site').value='';$('p_siteOther').value='';}
+  else if(ORGANS.indexOf(v)>-1){$('p_site').value=v;$('p_siteOther').value='';}
+  else{$('p_site').value='Other';$('p_siteOther').value=(v==='Other'?'':v);}
+  siteChanged();
+}
+
+/* ================= views ================= */
+function showView(name){
+  ['list','profile','detail','entry','data'].forEach(function(v){
+    $('view-'+v).classList.toggle('active',v===name);
+  });
+  $('tab-list').classList.toggle('active',name==='list'||name==='detail'||name==='entry');
+  $('tab-new').classList.toggle('active',name==='profile');
+  $('tab-data').classList.toggle('active',name==='data');
+  if(name==='list')renderList();
+  if(name==='data'){renderStats();warnStorage();renderGD();}
+  window.scrollTo(0,0);
+}
+
+/* ================= patient list ================= */
+function renderList(){
+  $('hCount').textContent=DB.patients.length;
+  var q=($('search').value||'').toLowerCase().trim();
+  var el=$('plist'),html='';
+  var items=DB.patients.map(function(p,i){p._i=i;return p;})
+    .filter(function(p){
+      if(!q)return true;
+      return ((p.name||'')+' '+(p.pid||'')+' '+(p.phone||'')).toLowerCase().indexOf(q)>-1;
+    });
+  if(!items.length){
+    el.innerHTML='<div class="empty"><span class="big">&#128203;</span>'+
+      (DB.patients.length?'No matches for this search.':'No patients yet.<br>Tap <b>New</b> to enter the first patient.')+'</div>';
+    return;
+  }
+  items.forEach(function(p){
+    var v=(p.visits||[]).length;
+    html+='<div class="card pcard" onclick="openDetail('+p._i+')">'+
+      '<div class="row1"><span class="idchip">ID '+esc(p.pid||'—')+'</span>'+
+      (p.dxc?'<span class="badge b-ok">Dx confirmed</span>':(p.dx?'<span class="badge b-warn">Dx unconfirmed</span>':''))+'</div>'+
+      '<div class="pname">'+esc(p.name||'(no name code)')+'</div>'+
+      '<div class="pmeta">'+esc(p.dx||'')+(p.dx&&p.phone?' &middot; ':'')+esc(p.phone||'')+
+      ' &middot; '+v+' visit'+(v===1?'':'s')+'</div></div>';
+  });
+  el.innerHTML=html;
+}
+
+/* ================= profile new/edit ================= */
+var PF=['name','pid','phone','age','sex','wt','ht','bmi','dx','site','stage','comorb','hx','neo','neodet','allergy'];
+function clearProfileForm(){PF.forEach(function(f){$('p_'+f).value='';});$('p_dxc').checked=false;$('p_siteOther').value='';siteChanged();}
+function newPatient(){
+  editingPatient=null;detailIdx=null;
+  clearProfileForm();
+  $('profTitle').textContent='New patient';
+  showView('profile');
+}
+function editProfile(){
+  if(detailIdx==null)return;
+  editingPatient=detailIdx;
+  var p=DB.patients[detailIdx];
+  clearProfileForm();
+  $('profTitle').textContent='Edit patient';
+  PF.forEach(function(f){if(p[f]!=null)$('p_'+f).value=p[f];});
+  setSiteSelect(p.site||'');
+  $('p_dxc').checked=!!p.dxc;
+  showView('profile');
+}
+function saveProfile(){
+  var name=$('p_name').value.trim(),pid=$('p_pid').value.trim();
+  if(!name||!pid){toast('Patient name code and ID are required');return;}
+  if(editingPatient==null){
+    for(var i=0;i<DB.patients.length;i++){
+      if(DB.patients[i].pid===pid){
+        if(confirm('Patient ID '+pid+' already exists ('+DB.patients[i].name+').\n\nOpen that patient instead of creating a duplicate?')){
+          openDetail(i);
+        }
+        return;
+      }
+    }
+  }
+  var p=editingPatient==null?{created:today()}:DB.patients[editingPatient];
+  PF.forEach(function(f){p[f]=$('p_'+f).value.trim();});
+  if($('p_site').value==='Other'){p.site=$('p_siteOther').value.trim()||'Other';}
+  p.dxc=$('p_dxc').checked;
+  ensureSections(p);
+  if(editingPatient==null)DB.patients.push(p);
+  persist();
+  toast(editingPatient==null?'Patient saved':'Profile updated');
+  var idx=editingPatient==null?DB.patients.length-1:editingPatient;
+  editingPatient=null;
+  openDetail(idx);
+}
+function cancelProfile(){
+  editingPatient=null;
+  showView(detailIdx!=null?'detail':'list');
+}
+
+/* ================= patient detail ================= */
+function openDetail(i){
+  detailIdx=i;
+  var p=DB.patients[i];
+  ensureSections(p);
+  $('d_chip').textContent='ID '+(p.pid||'—');
+  function row(k,v){return v?('<dt>'+k+'</dt><dd>'+esc(v)+'</dd>'):'';}
+  $('d_profile').innerHTML=
+    '<div class="card"><dl>'+
+    row('Name (code)',p.name)+row('Phone',p.phone)+
+    row('Age / Sex',(p.age?p.age+' y':'')+(p.age&&p.sex?' &middot; ':'')+(p.sex||''))+
+    row('Wt / Ht / BMI',(p.wt?p.wt+' kg':'')+(p.ht?' / '+p.ht+' cm':'')+(p.bmi?' / BMI '+p.bmi:''))+
+    row('Diagnosis',(p.dx||'')+(p.dx?(p.dxc?'  (confirmed)':'  (not confirmed)'):''))+
+    row('Site / organ',p.site)+row('Clinical stage',p.stage)+
+    row('Comorbidities',p.comorb)+row('Brief history',p.hx)+
+    row('Neoadjuvant',p.neo)+row('Neoadj. details',p.neodet)+
+    row('Allergies & drugs',p.allergy)+row('First entry',p.created)+
+    '</dl></div>';
+  renderSections();
+  showView('detail');
+}
+function renderSections(){
+  var p=DB.patients[detailIdx],html='';
+  SEC.forEach(function(s){
+    var arr=p[s.key]||[];
+    html+='<div class="sechead"><h3>'+s.title+'<span class="cnt">'+arr.length+'</span></h3>'+
+      '<button class="addbtn" onclick="newEntry(\''+s.key+'\')">+ Add</button></div>';
+    if(!arr.length){html+='<div class="note">No '+s.single+' recorded.</div>';}
+    else{
+      arr.map(function(e,j){return{e:e,j:j};})
+        .sort(function(a,b){return (a.e.date||'')<(b.e.date||'')?1:-1;})
+        .forEach(function(it){
+          var e=it.e;
+          html+='<div class="entry"><div class="etop"><span class="etitle">'+esc(s.head(e))+'</span>'+
+            '<span class="edate">'+esc(e.date||'')+'</span></div>';
+          s.fields.forEach(function(f){
+            if(f.k==='date'||f.k==='type'||(s.key==='ops'&&f.k==='name'))return;
+            if(e[f.k])html+='<p><b>'+f.l+':</b> '+esc(e[f.k])+'</p>';
+          });
+          if(e.imgs&&e.imgs.length){
+            html+='<div class="thumbrow">';
+            e.imgs.forEach(function(src){html+='<img class="thumb" src="'+src+'" alt="report" onclick="showImg(this.src)">';});
+            html+='</div>';
+          }
+          html+='<div class="eacts">'+
+            '<button class="e-edit" onclick="editEntry(\''+s.key+'\','+it.j+')">Edit</button>'+
+            '<button class="e-del" onclick="delEntry(\''+s.key+'\','+it.j+')">Delete</button>'+
+            '</div></div>';
+        });
+    }
+  });
+  $('d_sections').innerHTML=html;
+}
+function deletePatient(){
+  var p=DB.patients[detailIdx];
+  if(!confirm('Delete patient '+(p.name||'')+' (ID '+(p.pid||'')+') and all their records? This cannot be undone.'))return;
+  DB.patients.splice(detailIdx,1);
+  detailIdx=null;persist();showView('list');toast('Patient deleted');
+}
+
+/* ================= generic entry form ================= */
+var imgsWork=[];
+function newEntry(sk){
+  entryCtx={sec:sk,idx:null};imgsWork=[];
+  var s=secByKey(sk),p=DB.patients[detailIdx];
+  $('e_chip').textContent='ID '+(p.pid||'—');
+  $('entryTitle').textContent='Add '+s.single;
+  $('entryLegend').textContent=s.title;
+  buildEntryForm(s,null);
+  showView('entry');
+}
+function editEntry(sk,j){
+  entryCtx={sec:sk,idx:j};
+  var s=secByKey(sk),p=DB.patients[detailIdx];
+  imgsWork=(p[sk][j].imgs||[]).slice();
+  $('e_chip').textContent='ID '+(p.pid||'—');
+  $('entryTitle').textContent='Edit '+s.single;
+  $('entryLegend').textContent=s.title;
+  buildEntryForm(s,p[sk][j]);
+  showView('entry');
+}
+function pickImg(ev){
+  var files=Array.prototype.slice.call(ev.target.files||[]);
+  if(!files.length)return;
+  var done=0,added=0;
+  files.forEach(function(file){
+    compressImage(file,function(dataUrl){
+      if(dataUrl){imgsWork.push(dataUrl);added++;}
+      done++;
+      if(done===files.length){
+        renderImgWork();
+        toast(added?added+' image'+(added===1?'':'s')+' attached':'Could not read those images');
+        ev.target.value='';
+      }
+    });
+  });
+}
+function renderImgWork(){
+  var w=$('ef_imgwrap');if(!w)return;
+  var html='';
+  imgsWork.forEach(function(src,i){
+    html+='<div class="thumbbox"><img class="thumb" src="'+src+'" onclick="showImg(this.src)" alt="report">'+
+      '<button class="rm" onclick="dropImg('+i+')">Remove</button></div>';
+  });
+  w.innerHTML=html;
+}
+function dropImg(i){imgsWork.splice(i,1);renderImgWork();}
+function buildEntryForm(s,e){
+  var html='';
+  s.fields.forEach(function(f){
+    html+='<label>'+f.l+(f.opt?' <span class="opt">(optional)</span>':'')+'</label>';
+    var v=e&&e[f.k]!=null?e[f.k]:'';
+    if(f.t==='select'){
+      html+='<select id="ef_'+f.k+'">';
+      f.o.forEach(function(o){html+='<option'+(o===v?' selected':'')+'>'+o+'</option>';});
+      html+='</select>';
+    }else if(f.t==='textarea'){
+      html+='<textarea id="ef_'+f.k+'">'+esc(v)+'</textarea>';
+    }else if(f.t==='date'){
+      html+='<input type="date" id="ef_'+f.k+'" value="'+esc(v||today())+'">';
+    }else if(f.t==='number'){
+      html+='<input type="number" id="ef_'+f.k+'" min="0" inputmode="numeric" value="'+esc(v)+'">';
+    }else{
+      html+='<input type="text" id="ef_'+f.k+'" value="'+esc(v)+'">';
+    }
+  });
+  if(s.img){
+    html+='<label>Report images <span class="opt">(optional — you can select several at once)</span></label>'+
+      '<input type="file" id="ef_img" accept="image/*" multiple onchange="pickImg(event)">'+
+      '<div class="imgwrap" id="ef_imgwrap"></div>';
+  }
+  $('entryFields').innerHTML=html;
+  renderImgWork();
+}
+function compressImage(file,cb){
+  var img=new Image(),url=URL.createObjectURL(file);
+  img.onload=function(){
+    try{
+      var w=img.width,h=img.height,max=1100;
+      if(w>max||h>max){var r=Math.min(max/w,max/h);w=Math.round(w*r);h=Math.round(h*r);}
+      var c=document.createElement('canvas');c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      cb(c.toDataURL('image/jpeg',0.72));
+    }catch(e){cb(null);}
+    URL.revokeObjectURL(url);
+  };
+  img.onerror=function(){URL.revokeObjectURL(url);cb(null);};
+  img.src=url;
+}
+function saveEntry(){
+  var s=secByKey(entryCtx.sec),p=DB.patients[detailIdx];
+  var e=entryCtx.idx==null?{}:p[s.key][entryCtx.idx];
+  var any=false;
+  s.fields.forEach(function(f){
+    var v=$('ef_'+f.k).value.trim();
+    e[f.k]=v;
+    if(v&&f.t!=='date')any=true;
+  });
+  if(imgsWork.length){e.imgs=imgsWork.slice();any=true;}
+  else delete e.imgs;
+  if(!any){toast('Enter some details first');return;}
+  if(entryCtx.idx==null)p[s.key].push(e);
+  persist();
+  toast(s.single.charAt(0).toUpperCase()+s.single.slice(1)+' saved');
+  entryCtx=null;
+  openDetail(detailIdx);
+}
+function cancelEntry(){entryCtx=null;showView('detail');}
+function delEntry(sk,j){
+  var s=secByKey(sk),p=DB.patients[detailIdx];
+  if(!confirm('Delete this '+s.single+'?'))return;
+  p[sk].splice(j,1);persist();renderSections();toast('Deleted');
+}
+function showImg(src){$('overlayImg').src=src;$('overlay').classList.add('show');}
+
+/* ================= exports ================= */
+function csvCell(v){v=String(v==null?'':v);
+  if(/[",\n\r]/.test(v))v='"'+v.replace(/"/g,'""')+'"';return v;}
+function download(name,text,mime){
+  mime=mime||'text/csv;charset=utf-8';
+  var body=(mime.indexOf('csv')>-1?"\uFEFF":"")+text;
+  var blob=new Blob([body],{type:mime});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+}
+function fmtDate(){
+  var d=new Date(),M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return ('0'+d.getDate()).slice(-2)+'-'+M[d.getMonth()]+'-'+String(d.getFullYear()).slice(2);
+}
+function exportCSV(which){
+  if(!DB.patients.length){toast('No data to export');return;}
+  var out='',n=0;
+  if(which==='patients'){
+    var cols=['pid','name','phone','age','sex','wt','ht','bmi','dx','dxc','site','stage','comorb','hx','neo','neodet','allergy','created'];
+    var head=['PatientID','Name','Phone','Age','Sex','Weight_kg','Height_cm','BMI','Diagnosis','DxConfirmed','Site','ClinStage','Comorbidities','BriefHistory','Neoadjuvant','NeoadjDetails','AllergiesDrugHx','FirstEntry'];
+    out=head.join(',')+'\r\n';
+    DB.patients.forEach(function(p){
+      out+=cols.map(function(c){
+        if(c==='dxc')return p.dxc?'Yes':'No';
+        return csvCell(p[c]);
+      }).join(',')+'\r\n';n++;
+    });
+  }else{
+    var s=secByKey(which);
+    var head=['PatientID','Name'].concat(s.fields.map(function(f){return f.l;}));
+    if(s.img)head.push('ImageCount');
+    out=head.join(',')+'\r\n';
+    DB.patients.forEach(function(p){
+      (p[which]||[]).forEach(function(e){
+        var row=[csvCell(p.pid),csvCell(p.name)];
+        s.fields.forEach(function(f){row.push(csvCell(e[f.k]));});
+        if(s.img)row.push(e.imgs?e.imgs.length:0);
+        out+=row.join(',')+'\r\n';n++;
+      });
+    });
+    if(!n){toast('No '+s.title.toLowerCase()+' entries yet');return;}
+  }
+  var fname=(which==='patients'?'patients':secByKey(which).title.toLowerCase().replace(/[^a-z]+/g,'_'));
+  download(fname+'_'+today()+'.csv',out);
+  toast('CSV downloaded ('+n+' rows)');
+}
+function exportAllCSV(){
+  if(!DB.patients.length){toast('No data to export');return;}
+  var head=['PatientID','Name','Phone','Age','Sex','Weight_kg','Height_cm','BMI','Diagnosis','DxConfirmed','Site','ClinStage','Comorbidities','BriefHistory','Neoadjuvant','NeoadjDetails','AllergiesDrugHx','FirstEntry'];
+  SEC.forEach(function(s){head.push(s.title.replace(/[^A-Za-z]+/g,''));});
+  var out=head.join(',')+'\r\n';
+  DB.patients.forEach(function(p){
+    var row=[p.pid,p.name,p.phone,p.age,p.sex,p.wt,p.ht,p.bmi,p.dx,(p.dxc?'Yes':'No'),p.site,p.stage,p.comorb,p.hx,p.neo,p.neodet,p.allergy,p.created].map(csvCell);
+    SEC.forEach(function(s){
+      var parts=(p[s.key]||[]).map(function(e){
+        var bits=[];
+        s.fields.forEach(function(f){if(e[f.k])bits.push(f.l+': '+e[f.k]);});
+        if(e.imgs&&e.imgs.length)bits.push(e.imgs.length+' image(s)');
+        return bits.join(' — ');
+      });
+      row.push(csvCell(parts.join('  ||  ')));
+    });
+    out+=row.join(',')+'\r\n';
+  });
+  download('all_patient_data_'+fmtDate()+'.csv',out);
+  toast('Full CSV downloaded ('+DB.patients.length+' patients)');
+}
+
+/* ---- Google Drive backup & restore ---- */
+function renderGD(){
+  $('gd_url').value=DB.gdUrl||'';
+  $('gdStatus').innerHTML=DB.gdUrl
+    ?'<span class="badge b-ok">Connected</span>'
+    :'<span class="badge b-warn">Not set up</span>';
+}
+function gdSaveUrl(){
+  var u=$('gd_url').value.trim();
+  if(!u){DB.gdUrl='';persist();renderGD();toast('Connection link removed');return;}
+  if(!/^https:\/\/script\.google\.com\/macros\/.+\/exec$/.test(u)){
+    alert('That does not look like a valid connection link. It should start with https://script.google.com/macros/ and end with /exec');return;}
+  DB.gdUrl=u;persist();renderGD();toast('Google Drive connected');
+}
+function gdBackup(){
+  if(!DB.gdUrl){alert('Google Drive is not set up yet.\n\nPaste your connection link in the box below first (one-time step).');return;}
+  if(!confirm('Are you sure you want to backup all data to Google Drive now?'))return;
+  toast('Uploading backup\u2026');
+  var name=fmtDate()+'_PatientData.backup';
+  fetch(DB.gdUrl,{method:'POST',headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({action:'save',name:name,data:JSON.stringify(DB)})})
+  .then(function(r){return r.json();})
+  .then(function(res){
+    if(res&&res.ok)toast('Backup saved to Google Drive: '+name);
+    else toast('Backup failed — please try again');
+  })
+  .catch(function(){toast('No connection — backup failed');});
+}
+function gdRestore(){
+  if(!DB.gdUrl){alert('Google Drive is not set up yet.\n\nPaste your connection link in the box below first (one-time step).');return;}
+  if(!confirm('Are you sure you want to restore from Google Drive?\n\nThe data currently on this phone will be replaced by the backup you choose.'))return;
+  toast('Loading backup list\u2026');
+  fetch(DB.gdUrl+'?action=list')
+  .then(function(r){return r.json();})
+  .then(function(res){
+    var files=(res&&res.files)||[];
+    if(!files.length){toast('No backups found in Google Drive');return;}
+    var html='<p style="font-size:13.5px;color:var(--steel);margin-top:12px"><b>Tap the backup to restore</b> (newest first):</p>';
+    files.forEach(function(f){
+      html+='<button class="btn btn-ghost" style="margin-top:8px" onclick="gdFetch(\''+f.id+'\',\''+esc(f.name)+'\')">'+esc(f.name)+'</button>';
+    });
+    html+='<button class="btn btn-danger" onclick="document.getElementById(\'gdList\').innerHTML=\'\'">Cancel</button>';
+    $('gdList').innerHTML=html;
+  })
+  .catch(function(){toast('No connection — could not reach Google Drive');});
+}
+function gdFetch(id,name){
+  toast('Downloading '+name+'\u2026');
+  fetch(DB.gdUrl+'?id='+encodeURIComponent(id))
+  .then(function(r){return r.text();})
+  .then(function(txt){applyBackup(txt,name);})
+  .catch(function(){toast('Download failed');});
+}
+function applyBackup(txt,name){
+  try{
+    var d=JSON.parse(String(txt).replace(/^\uFEFF/,''));
+    if(!d||!Array.isArray(d.patients))throw 0;
+    if(!confirm('Replace current data ('+DB.patients.length+' patients) with "'+name+'" ('+d.patients.length+' patients)?'))return;
+    var keepUrl=DB.gdUrl;
+    DB=d;if(!DB.gdUrl)DB.gdUrl=keepUrl;
+    DB.patients.forEach(function(p){ensureSections(p);migrate(p);});
+    persist();
+    $('gdList').innerHTML='';
+    renderGD();renderList();renderStats();
+    toast('Restored: '+DB.patients.length+' patients');
+  }catch(e){toast('That backup file could not be read');}
+}
+
+/* ---- phone fallback ---- */
+function exportLocal(){
+  if(!confirm('Save a backup file to this phone now?'))return;
+  download(fmtDate()+'_PatientData.backup',JSON.stringify(DB),'application/octet-stream');
+  toast('Backup saved to phone Downloads');
+}
+function importLocal(ev){
+  var file=ev.target.files[0];if(!file)return;
+  var r=new FileReader();
+  r.onload=function(){applyBackup(r.result,file.name);ev.target.value='';};
+  r.readAsText(file);
+}
+function renderStats(){
+  var counts=SEC.map(function(s){
+    var n=0;DB.patients.forEach(function(p){n+=(p[s.key]||[]).length;});
+    return s.title+': '+n;
+  });
+  var imgs=0;DB.patients.forEach(function(p){SEC.forEach(function(s){
+    (p[s.key]||[]).forEach(function(e){imgs+=(e.imgs||[]).length;});});});
+  $('stats').innerHTML='Patients: '+DB.patients.length+'<br>'+counts.join('<br>')+
+    '<br>Report images stored: '+imgs+
+    '<br>Storage: '+(idb?'device database (IndexedDB)':(memOnly?'memory only — backup required!':'device storage'));
+}
+
+/* ================= init ================= */
+load(function(){
+  populateSite();
+  DB.patients.forEach(function(p){ensureSections(p);migrate(p);});
+  renderList();
+  warnStorage();
+});
+</script>
+</body>
+</html>
