@@ -17,7 +17,7 @@
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
     background:var(--paper);color:var(--ink);font-size:17px;line-height:1.5;padding-bottom:92px}
-  header{background:#0A1118;color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line)}
+  header{background:#0A1118;color:#fff;padding:14px 16px 12px;position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line)}
   header h1{font-size:18px;font-weight:600}
   header .sub{font-size:12.5px;color:#5A7A8A;margin-top:2px}
   header .sub b{color:#7AA0B0}
@@ -77,8 +77,25 @@
   .btn-row .btn{margin-top:10px}
   .btn-sm{width:auto;display:inline-block;padding:8px 14px;font-size:14px;border-radius:8px;margin:0}
 
-  .search{width:100%;padding:11px 13px;font-size:15px;border:1px solid var(--line);
-    border-radius:10px;margin-bottom:12px;background:#fff}
+  .radio-group{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+  .radio-opt{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:500;
+    background:var(--card);border:1px solid var(--line);border-radius:9px;padding:10px 12px;cursor:pointer}
+  .radio-opt input[type=radio]{width:18px;height:18px;accent-color:var(--teal);flex-shrink:0}
+  .radio-opt.selected{border-color:var(--teal);background:var(--green-bg)}
+  body.light .radio-opt.selected{background:#EAE0CC;border-color:#B85C2A}
+  .search-panel{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px;margin-bottom:12px}
+  .search-row{display:flex;flex-direction:row;align-items:center;gap:8px;margin-bottom:8px}
+  .search-input{flex:1;min-width:0;padding:10px 12px;font-size:15px;border:1px solid var(--line);
+    border-radius:9px;background:#0F1F2E;color:var(--ink);font-family:inherit}
+  .search-input::placeholder{color:var(--steel)}
+  body.light .search-input{background:#F5F0E8;color:#2C1F14;border-color:#C4A07A}
+  .search-btn{flex-shrink:0;background:var(--teal);color:#fff;border:none;border-radius:9px;
+    padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .search-btn:active{background:var(--teal-dark)}
+  .clear-btn{width:100%;background:none;border:1px solid var(--line);color:var(--steel);
+    border-radius:9px;padding:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:inherit}
+  .clear-btn:active{background:var(--line)}
 
   .detail-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px}
   .back{background:none;border:none;color:var(--teal);font-size:16px;font-weight:700;
@@ -159,56 +176,102 @@
     background:var(--teal);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit}
   .login-btn:active{background:var(--teal-dark)}
   .login-err{color:#E87E77;font-size:13.5px;margin-top:12px;min-height:20px;font-weight:600}
+
+  /* ---- light theme ---- */
+  body.light{
+    --ink:#2C1F14; --paper:#F5F0E8; --card:#EDE8DC;
+    --teal:#B85C2A; --teal-dark:#96461A;
+    --steel:#7A5C3A; --line:#D8CEB8;
+    --amber:#B85C2A; --amber-bg:#F5EBD8;
+    --red:#A63A32; --red-bg:#F5E0DC;
+    --green-bg:#EAE0CC;
+  }
+  body.light header{background:#2C1F14;color:#F5F0E8}
+  body.light header .sub{color:#9A7A5A}
+  body.light header .sub b{color:#C4A07A}
+  body.light header .credit{color:#7A5C3A}
+  body.light nav{background:#2C1F14;border-top:1px solid #4A3020}
+  body.light nav button{color:#9A7A5A}
+  body.light nav button.active{color:#D4743A}
+  body.light .pcard:active{background:#E0D8C8}
+  body.light .idchip{border-color:#C4A07A}
+  body.light input[type=text],body.light input[type=number],body.light input[type=tel],
+  body.light input[type=date],body.light select,body.light textarea{background:#F5F0E8;border-color:#C4A07A;color:#2C1F14}
+  body.light input[readonly]{background:#E8E0D0;color:#7A5C3A}
+  body.light select option{background:#F5F0E8;color:#2C1F14}
+  body.light .note{background:#EAE0CC;border-color:#C4A07A}
+  body.light .banner-warn{border-color:#C4A07A}
+  body.light .btn-ghost{border-color:#C4A07A;color:#7A5C3A}
+  body.light .btn-danger{border-color:#C4A07A;color:var(--red)}
+  body.light .addbtn{border-color:#C4A07A;color:#B85C2A}
+  body.light label{color:#2C1F14}
+  body.light .pin-overlay{background:#2C1F14}
+  body.light .pin-btn{background:#3A2510}
+  body.light .login-overlay{background:#2C1F14}
+  body.light .login-overlay input{background:#3A2510;border-color:#6A4020;color:#F5F0E8}
+  body.light .login-overlay input::placeholder{color:#9A7A5A}
+  body.light .toast{background:#B85C2A}
+
+  /* ---- desktop layout ---- */
+  body.desktop main{max-width:1200px;padding:20px 32px 28px}
+  body.desktop .grid2{grid-template-columns:1fr 1fr}
+  body.desktop .grid3{grid-template-columns:1fr 1fr 1fr}
+  body.desktop fieldset{padding:16px 20px 18px}
+  body.desktop .card{padding:18px}
+  body.desktop dl{grid-template-columns:35% 65%;font-size:15px}
+  body.desktop .exgrid{grid-template-columns:repeat(4,1fr)}
+  body.desktop .btn{font-size:15px;padding:12px}
+  body.desktop input[type=text],body.desktop input[type=number],body.desktop input[type=tel],
+  body.desktop input[type=date],body.desktop select,body.desktop textarea{font-size:15px;padding:10px 12px}
+
+  /* ---- toggle buttons ---- */
+  .hdr-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .hdr-titles{flex:1;min-width:0}
+  .hdr-btns{display:flex;gap:6px;flex-shrink:0;margin-top:2px}
+  .toggle-btn{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);
+    color:#fff;border-radius:8px;padding:5px 9px;font-size:16px;cursor:pointer;
+    line-height:1;font-family:inherit;transition:background .15s}
+  .toggle-btn:active{background:rgba(255,255,255,0.25)}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Patient Data</h1>
-  <div class="sub"><b id="hCount">0</b> patients &middot; stored on this device only</div>
-  <div class="credit">Designed by Dr. Sofyan Hussein Khalid El-Khatib — Senior Specialist in Surgical Oncology, Jordanian Royal Medical Services</div>
+  <div class="hdr-row">
+    <div class="hdr-titles">
+      <h1>Patient Data</h1>
+      <div class="sub"><b id="hCount">0</b> patients &middot; stored on this device only</div>
+      <div class="credit">Designed by Dr. Sofyan Hussein Khalid El-Khatib — Senior Specialist in Surgical Oncology, Jordanian Royal Medical Services</div>
+    </div>
+    <div class="hdr-btns">
+      <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <button class="toggle-btn" id="layoutBtn" onclick="toggleLayout()" title="Toggle layout">📱</button>
+    </div>
+  </div>
 </header>
 
-<div class="pin-overlay" id="pinOverlay">
-  <h2>Patient Data</h2>
-  <div class="pinsub">Designed by Dr. Sofyan Hussein Khalid El-Khatib<br>Enter PIN to continue</div>
-  <div class="pin-dots">
-    <div class="pin-dot" id="pd0"></div>
-    <div class="pin-dot" id="pd1"></div>
-    <div class="pin-dot" id="pd2"></div>
-    <div class="pin-dot" id="pd3"></div>
-  </div>
-  <div class="pin-grid">
-    <button class="pin-btn" onclick="pinPress('1')">1</button>
-    <button class="pin-btn" onclick="pinPress('2')">2</button>
-    <button class="pin-btn" onclick="pinPress('3')">3</button>
-    <button class="pin-btn" onclick="pinPress('4')">4</button>
-    <button class="pin-btn" onclick="pinPress('5')">5</button>
-    <button class="pin-btn" onclick="pinPress('6')">6</button>
-    <button class="pin-btn" onclick="pinPress('7')">7</button>
-    <button class="pin-btn" onclick="pinPress('8')">8</button>
-    <button class="pin-btn" onclick="pinPress('9')">9</button>
-    <button class="pin-btn" onclick="pinPress('C')" style="font-size:16px">Clear</button>
-    <button class="pin-btn" onclick="pinPress('0')">0</button>
-    <button class="pin-btn" onclick="pinPress('B')" style="font-size:18px">⌫</button>
-  </div>
-  <div class="pin-err" id="pinErr"></div>
-</div>
 
-<div class="login-overlay" id="loginOverlay">
-  <h2>Patient Data</h2>
-  <div class="loginsub">Designed by Dr. Sofyan Hussein Khalid El-Khatib<br>Jordanian Royal Medical Services<br><br>Please sign in to continue</div>
-  <input type="text" id="login_user" placeholder="Username" autocomplete="username" autocorrect="off" autocapitalize="none">
-  <input type="password" id="login_pass" placeholder="Password" autocomplete="current-password">
-  <button class="login-btn" onclick="doLogin()">Sign in</button>
-  <div class="login-err" id="loginErr"></div>
-</div>
 
 <main>
 
 <!-- ================= PATIENT LIST ================= -->
 <section id="view-list" class="view active">
-  <input type="text" id="search" class="search" placeholder="Search name, ID, or phone&hellip;" oninput="renderList()">
+  <div class="search-panel">
+    <div class="search-row">
+      <input type="text" id="search" class="search-input" placeholder="Name, ID, or phone&hellip;">
+      <button class="search-btn" onclick="renderList()">Search</button>
+    </div>
+    <div class="search-row">
+      <select id="search_organ" class="search-input">
+        <option value="">All organs</option>
+      </select>
+    </div>
+    <div class="search-row">
+      <input type="text" id="search_dx" class="search-input" placeholder="Diagnosis&hellip;">
+      <button class="search-btn" onclick="renderList()">Search</button>
+    </div>
+    <button class="clear-btn" onclick="clearSearch()">Clear all filters</button>
+  </div>
   <div id="plist"></div>
 </section>
 
@@ -346,6 +409,22 @@
 /* ---- hardcoded Google Drive script URL ---- */
 var GD_URL='https://script.google.com/macros/s/AKfycbxPIahNvIE95yjgp1cR_WhEr3VCqI-H4rqrextz2Ja8KHPpRlXaY95LiR5mMJDL-TUenQ/exec';
 
+/* ---- theme & layout toggles ---- */
+function applyTheme(dark){
+  document.body.classList.toggle('light',!dark);
+  var btn=$('themeBtn');if(btn)btn.textContent=dark?'🌙':'☀️';
+}
+function toggleTheme(){
+  applyTheme(document.body.classList.contains('light'));
+}
+function applyLayout(mobile){
+  document.body.classList.toggle('desktop',!mobile);
+  var btn=$('layoutBtn');if(btn)btn.textContent=mobile?'📱':'🖥️';
+}
+function toggleLayout(){
+  applyLayout(document.body.classList.contains('desktop'));
+}
+
 /* ---- PIN lock ---- */
 var PIN_CORRECT='2501', pinEntry='';
 function pinPress(k){
@@ -395,7 +474,7 @@ var entryCtx=null;         /* {sec, idx|null} for entry form        */
 
 /* ================= section configs ================= */
 var SEC=[
- {key:'ops', title:'Operations', single:'operation',
+ {key:'ops', title:'Operations', single:'operation', img:1,
   fields:[
    {k:'name', l:'Name of the operation', t:'text'},
    {k:'date', l:'Date', t:'date'},
@@ -436,8 +515,10 @@ var SEC=[
  {key:'mdt', title:'MDT', single:'MDT result',
   fields:[
    {k:'date', l:'Date', t:'date'},
+   {k:'intent', l:'Treatment intent', t:'radio', o:['Curative','Palliative','Best supportive care','Under evaluation']},
+   {k:'status', l:'MDT status', t:'radio', o:['Pending MDT discussion','MDT discussion completed','Referred to another MDT','Decision deferred — awaiting further workup']},
    {k:'result', l:'MDT result / decision', t:'textarea'}],
-  head:function(e){return 'MDT';}},
+  head:function(e){return e.status||'MDT';}},
 
  {key:'visits', title:'Follow-up visits', single:'follow-up visit',
   fields:[
@@ -524,6 +605,12 @@ function populateSite(){
   ORGANS.forEach(function(o){html+='<option>'+o+'</option>';});
   html+='<option>Other</option>';
   s.innerHTML=html;
+  /* also populate search organ dropdown */
+  var so=$('search_organ'),shtml='<option value="">All organs</option>';
+  ORGANS.forEach(function(o){shtml+='<option>'+o+'</option>';});
+  shtml+='<option>Other</option>';
+  so.innerHTML=shtml;
+  so.onchange=function(){renderList();};
 }
 function siteChanged(){
   $('siteOtherWrap').style.display=$('p_site').value==='Other'?'block':'none';
@@ -552,15 +639,19 @@ function showView(name){
 function renderList(){
   $('hCount').textContent=DB.patients.length;
   var q=($('search').value||'').toLowerCase().trim();
+  var organ=($('search_organ').value||'').toLowerCase().trim();
+  var dx=($('search_dx').value||'').toLowerCase().trim();
   var el=$('plist'),html='';
   var items=DB.patients.map(function(p,i){p._i=i;return p;})
     .filter(function(p){
-      if(!q)return true;
-      return ((p.name||'')+' '+(p.pid||'')+' '+(p.phone||'')).toLowerCase().indexOf(q)>-1;
+      if(q&&((p.name||'')+' '+(p.pid||'')+' '+(p.phone||'')).toLowerCase().indexOf(q)===-1)return false;
+      if(organ&&(p.site||'').toLowerCase().indexOf(organ)===-1)return false;
+      if(dx&&(p.dx||'').toLowerCase().indexOf(dx)===-1)return false;
+      return true;
     });
   if(!items.length){
     el.innerHTML='<div class="empty"><span class="big">&#128203;</span>'+
-      (DB.patients.length?'No matches for this search.':'No patients yet.<br>Tap <b>New</b> to enter the first patient.')+'</div>';
+      (DB.patients.length?'No matches for these filters.':'No patients yet.<br>Tap <b>New</b> to enter the first patient.')+'</div>';
     return;
   }
   items.forEach(function(p){
@@ -573,6 +664,12 @@ function renderList(){
       ' &middot; '+v+' visit'+(v===1?'':'s')+'</div></div>';
   });
   el.innerHTML=html;
+}
+function clearSearch(){
+  $('search').value='';
+  $('search_organ').value='';
+  $('search_dx').value='';
+  renderList();
 }
 
 /* ================= profile new/edit ================= */
@@ -737,7 +834,16 @@ function buildEntryForm(s,e){
   s.fields.forEach(function(f){
     html+='<label>'+f.l+(f.opt?' <span class="opt">(optional)</span>':'')+'</label>';
     var v=e&&e[f.k]!=null?e[f.k]:'';
-    if(f.t==='select'){
+    if(f.t==='radio'){
+      html+='<div class="radio-group" id="ef_'+f.k+'">';
+      f.o.forEach(function(o){
+        var chk=o===v?' checked':'';
+        var sel=o===v?' selected':'';
+        html+='<label class="radio-opt'+(o===v?' selected':'')+'" onclick="selectRadio(this)">'+
+          '<input type="radio" name="ef_'+f.k+'" value="'+esc(o)+'"'+chk+'>'+esc(o)+'</label>';
+      });
+      html+='</div>';
+    }else if(f.t==='select'){
       html+='<select id="ef_'+f.k+'">';
       f.o.forEach(function(o){html+='<option'+(o===v?' selected':'')+'>'+o+'</option>';});
       html+='</select>';
@@ -759,6 +865,12 @@ function buildEntryForm(s,e){
   $('entryFields').innerHTML=html;
   renderImgWork();
 }
+function selectRadio(label){
+  var group=label.parentNode;
+  Array.prototype.forEach.call(group.querySelectorAll('.radio-opt'),function(l){l.classList.remove('selected');});
+  label.classList.add('selected');
+  label.querySelector('input[type=radio]').checked=true;
+}
 function compressImage(file,cb){
   var img=new Image(),url=URL.createObjectURL(file);
   img.onload=function(){
@@ -779,7 +891,13 @@ function saveEntry(){
   var e=entryCtx.idx==null?{}:p[s.key][entryCtx.idx];
   var any=false;
   s.fields.forEach(function(f){
-    var v=$('ef_'+f.k).value.trim();
+    var v;
+    if(f.t==='radio'){
+      var checked=document.querySelector('#ef_'+f.k+' input[type=radio]:checked');
+      v=checked?checked.value:'';
+    }else{
+      v=$('ef_'+f.k).value.trim();
+    }
     e[f.k]=v;
     if(v&&f.t!=='date')any=true;
   });
@@ -957,5 +1075,40 @@ load(function(){
   warnStorage();
 });
 </script>
+<div class="pin-overlay" id="pinOverlay">
+  <h2>Patient Data</h2>
+  <div class="pinsub">Designed by Dr. Sofyan Hussein Khalid El-Khatib<br>Enter PIN to continue</div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-grid">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" onclick="pinPress('C')" style="font-size:16px">Clear</button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn" onclick="pinPress('B')" style="font-size:18px">⌫</button>
+  </div>
+  <div class="pin-err" id="pinErr"></div>
+</div>
+
+<div class="login-overlay" id="loginOverlay">
+  <h2>Patient Data</h2>
+  <div class="loginsub">Designed by Dr. Sofyan Hussein Khalid El-Khatib<br>Jordanian Royal Medical Services<br><br>Please sign in to continue</div>
+  <input type="text" id="login_user" placeholder="Username" autocomplete="username" autocorrect="off" autocapitalize="none">
+  <input type="password" id="login_pass" placeholder="Password" autocomplete="current-password">
+  <button class="login-btn" onclick="doLogin()">Sign in</button>
+  <div class="login-err" id="loginErr"></div>
+</div>
+
 </body>
 </html>
