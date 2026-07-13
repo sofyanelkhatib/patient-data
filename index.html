@@ -341,7 +341,37 @@
     <button class="btn btn-danger" onclick="deletePatient()">Delete patient</button>
   </div>
   <div id="d_sections"></div>
+
+  <!-- MDT Summary -->
+  <div style="margin-top:8px">
+    <button class="btn btn-primary" onclick="generateMDTSummary()" style="background:#1A6E6D">&#128203; Generate Patient Summary For MDT</button>
+    <button class="btn btn-primary" onclick="generateMDTDecision()" style="background:#1A4E6D;margin-top:10px">&#9989; Generate Patient MDT Decision</button>
+  </div>
 </section>
+
+<!-- MDT Decision Modal -->
+<div class="overlay" id="mdtDecisionModal" style="align-items:flex-start;padding:0;overflow-y:auto">
+  <div style="background:var(--card);width:100%;min-height:100vh;padding:20px 16px 100px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h2 style="font-size:17px;color:var(--ink)">Patient MDT Decision</h2>
+      <button onclick="$('mdtDecisionModal').classList.remove('show')" style="background:none;border:none;color:var(--steel);font-size:22px;cursor:pointer">&#10005;</button>
+    </div>
+    <textarea id="mdtDecisionText" style="width:100%;min-height:60vh;font-size:13.5px;line-height:1.7;font-family:var(--mono);background:#0A1520;color:#C8E0E8;border:1px solid var(--line);border-radius:10px;padding:14px;resize:vertical"></textarea>
+    <button class="btn btn-primary" onclick="copyMDTDecision()" style="margin-top:12px">Copy to clipboard</button>
+    <button class="btn btn-ghost" onclick="$('mdtDecisionModal').classList.remove('show')" style="margin-top:8px">Close</button>
+  </div>
+</div>
+<div class="overlay" id="mdtModal" style="align-items:flex-start;padding:0;overflow-y:auto">
+  <div style="background:var(--card);width:100%;min-height:100vh;padding:20px 16px 100px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h2 style="font-size:17px;color:var(--ink)">Patient MDT Summary</h2>
+      <button onclick="$('mdtModal').classList.remove('show')" style="background:none;border:none;color:var(--steel);font-size:22px;cursor:pointer">&#10005;</button>
+    </div>
+    <textarea id="mdtSummaryText" style="width:100%;min-height:60vh;font-size:13.5px;line-height:1.7;font-family:var(--mono);background:#0A1520;color:#C8E0E8;border:1px solid var(--line);border-radius:10px;padding:14px;resize:vertical"></textarea>
+    <button class="btn btn-primary" onclick="copyMDTSummary()" style="margin-top:12px">Copy to clipboard</button>
+    <button class="btn btn-ghost" onclick="$('mdtModal').classList.remove('show')" style="margin-top:8px">Close</button>
+  </div>
+</div>
 
 <!-- ================= ENTRY FORM (generic) ================= -->
 <section id="view-entry" class="view">
@@ -517,6 +547,7 @@ var SEC=[
    {k:'date', l:'Date', t:'date'},
    {k:'intent', l:'Treatment intent', t:'radio', o:['Curative','Palliative','Best supportive care','Under evaluation']},
    {k:'status', l:'MDT status', t:'radio', o:['Pending MDT discussion','MDT discussion completed','Referred to another MDT','Decision deferred — awaiting further workup']},
+   {k:'points', l:'Points discussed in the MDT', t:'textarea'},
    {k:'result', l:'MDT result / decision', t:'textarea'}],
   head:function(e){return e.status||'MDT';}},
 
@@ -910,7 +941,192 @@ function saveEntry(){
   entryCtx=null;
   openDetail(detailIdx);
 }
+/* ---- MDT Summary ---- */
+function generateMDTSummary(){
+  var p=DB.patients[detailIdx];
+  var lines=[];
+  var div='─'.repeat(50);
+
+  lines.push('PATIENT MDT SUMMARY');
+  lines.push(div);
+  lines.push('Generated: '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}));
+  lines.push('');
+
+  // Profile
+  lines.push('[ PATIENT PROFILE ]');
+  lines.push('Code Name : '+(p.name||'—'));
+  lines.push('Code ID   : '+(p.pid||'—'));
+  lines.push('Phone     : '+(p.phone||'—'));
+  lines.push('Age / Sex : '+(p.age?p.age+' y':'—')+(p.sex?' / '+p.sex:''));
+  lines.push('BMI       : '+(p.bmi?p.bmi+' kg/m²  (Wt: '+(p.wt||'—')+' kg, Ht: '+(p.ht||'—')+' cm)':'—'));
+  lines.push('');
+
+  // Diagnosis
+  lines.push('[ DIAGNOSIS ]');
+  lines.push('Diagnosis  : '+(p.dx||'—')+(p.dxc?' (Confirmed)':' (Not confirmed)'));
+  lines.push('Site/Organ : '+(p.site||'—'));
+  lines.push('Clin.Stage : '+(p.stage||'—'));
+  lines.push('');
+
+  // History
+  lines.push('[ CLINICAL HISTORY ]');
+  lines.push('Comorbidities     : '+(p.comorb||'—'));
+  lines.push('Brief History     : '+(p.hx||'—'));
+  lines.push('Neoadjuvant Rx    : '+(p.neo||'—')+(p.neodet?' — '+p.neodet:''));
+  lines.push('Allergies / Drugs : '+(p.allergy||'—'));
+  lines.push('');
+
+  // Operations
+  var ops=p.ops||[];
+  lines.push('[ OPERATIONS ('+ops.length+') ]');
+  if(!ops.length){lines.push('None recorded.');}
+  else{ops.forEach(function(e,i){
+    lines.push((i+1)+'. '+( e.name||'Operation')+' — '+(e.date||'date unknown'));
+    if(e.approach)lines.push('   Approach  : '+e.approach);
+    if(e.findings)lines.push('   Findings  : '+e.findings);
+    if(e.imgs&&e.imgs.length)lines.push('   Images    : '+e.imgs.length+' attached');
+  });}
+  lines.push('');
+
+  // Laboratory
+  var labs=p.labs||[];
+  lines.push('[ LABORATORY ('+labs.length+') ]');
+  if(!labs.length){lines.push('None recorded.');}
+  else{labs.forEach(function(e,i){
+    lines.push((i+1)+'. '+(e.date||'date unknown'));
+    if(e.markers)lines.push('   Tumor markers : '+e.markers);
+    if(e.abnormal)lines.push('   Other labs    : '+e.abnormal);
+  });}
+  lines.push('');
+
+  // Radiology
+  var rad=p.rad||[];
+  lines.push('[ RADIOLOGY ('+rad.length+') ]');
+  if(!rad.length){lines.push('None recorded.');}
+  else{rad.forEach(function(e,i){
+    lines.push((i+1)+'. '+(e.type||'Study')+' — '+(e.date||'date unknown'));
+    if(e.findings)lines.push('   Findings : '+e.findings);
+    if(e.imgs&&e.imgs.length)lines.push('   Images   : '+e.imgs.length+' attached');
+  });}
+  lines.push('');
+
+  // Endoscopy
+  var endo=p.endo||[];
+  lines.push('[ ENDOSCOPY ('+endo.length+') ]');
+  if(!endo.length){lines.push('None recorded.');}
+  else{endo.forEach(function(e,i){
+    lines.push((i+1)+'. '+(e.type||'Procedure')+' — '+(e.date||'date unknown'));
+    if(e.findings)lines.push('   Findings : '+e.findings);
+    if(e.imgs&&e.imgs.length)lines.push('   Images   : '+e.imgs.length+' attached');
+  });}
+  lines.push('');
+
+  // Pathology
+  var path=p.path||[];
+  lines.push('[ PATHOLOGY ('+path.length+') ]');
+  if(!path.length){lines.push('None recorded.');}
+  else{path.forEach(function(e,i){
+    lines.push((i+1)+'. '+(e.date||'date unknown'));
+    if(e.result) lines.push('   Result  : '+e.result);
+    if(e.stage)  lines.push('   Stage   : '+e.stage);
+    if(e.margin) lines.push('   Margin  : '+e.margin);
+    if(e.nodes)  lines.push('   Nodes + : '+e.nodes);
+    if(e.imgs&&e.imgs.length)lines.push('   Images  : '+e.imgs.length+' attached');
+  });}
+  lines.push('');
+
+  // Previous MDT
+  var mdt=p.mdt||[];
+  lines.push('[ PREVIOUS MDT DISCUSSIONS ('+mdt.length+') ]');
+  if(!mdt.length){lines.push('None recorded.');}
+  else{mdt.forEach(function(e,i){
+    lines.push((i+1)+'. '+(e.date||'date unknown'));
+    if(e.intent) lines.push('   Treatment intent : '+e.intent);
+    if(e.status) lines.push('   MDT status       : '+e.status);
+    if(e.points) lines.push('   Points discussed : '+e.points);
+    if(e.result) lines.push('   Decision         : '+e.result);
+  });}
+  lines.push('');
+
+  // Follow-up visits
+  var visits=p.visits||[];
+  lines.push('[ FOLLOW-UP VISITS ('+visits.length+') ]');
+  if(!visits.length){lines.push('None recorded.');}
+  else{visits.forEach(function(e,i){
+    lines.push((i+1)+'. '+(e.date||'date unknown')+' — '+(e.cause||'visit'));
+    if(e.causeDet) lines.push('   Reason    : '+e.causeDet);
+    if(e.complaint)lines.push('   Complaint : '+e.complaint);
+    if(e.newLabs)  lines.push('   New labs  : '+e.newLabs);
+    if(e.newRad)   lines.push('   New rad   : '+e.newRad);
+    if(e.plan)     lines.push('   Plan      : '+e.plan);
+  });}
+  lines.push('');
+  lines.push(div);
+  lines.push('End of summary — generated by Patient Data App');
+
+  $('mdtSummaryText').value=lines.join('\n');
+  $('mdtModal').classList.add('show');
+}
+function copyMDTSummary(){
+  var t=$('mdtSummaryText');
+  t.select();
+  try{
+    navigator.clipboard.writeText(t.value).then(function(){toast('Summary copied to clipboard');})
+    .catch(function(){document.execCommand('copy');toast('Summary copied to clipboard');});
+  }catch(e){document.execCommand('copy');toast('Summary copied to clipboard');}
+}
 function cancelEntry(){entryCtx=null;showView('detail');}
+function generateMDTDecision(){
+  var p=DB.patients[detailIdx];
+  var lines=[];
+  var div='─'.repeat(50);
+
+  lines.push('PATIENT MDT DECISION');
+  lines.push(div);
+  lines.push('Generated: '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}));
+  lines.push('');
+
+  // Patient profile
+  lines.push('[ PATIENT PROFILE ]');
+  lines.push('Code Name  : '+(p.name||'—'));
+  lines.push('Code ID    : '+(p.pid||'—'));
+  lines.push('Phone      : '+(p.phone||'—'));
+  lines.push('Age / Sex  : '+(p.age?p.age+' y':'—')+(p.sex?' / '+p.sex:''));
+  lines.push('Diagnosis  : '+(p.dx||'—')+(p.dxc?' (Confirmed)':' (Not confirmed)'));
+  lines.push('Site/Organ : '+(p.site||'—'));
+  lines.push('Clin.Stage : '+(p.stage||'—'));
+  lines.push('');
+
+  // MDT entries
+  var mdt=p.mdt||[];
+  lines.push('[ MDT DISCUSSIONS & DECISIONS ('+mdt.length+') ]');
+  if(!mdt.length){
+    lines.push('No MDT entries recorded.');
+  }else{
+    mdt.forEach(function(e,i){
+      lines.push('');
+      lines.push('MDT Entry '+(i+1)+' — '+(e.date||'date unknown'));
+      lines.push('  Treatment intent  : '+(e.intent||'—'));
+      lines.push('  MDT status        : '+(e.status||'—'));
+      lines.push('  Points discussed  : '+(e.points||'—'));
+      lines.push('  MDT decision      : '+(e.result||'—'));
+    });
+  }
+  lines.push('');
+  lines.push(div);
+  lines.push('End of MDT Decision — generated by Patient Data App');
+
+  $('mdtDecisionText').value=lines.join('\n');
+  $('mdtDecisionModal').classList.add('show');
+}
+function copyMDTDecision(){
+  var t=$('mdtDecisionText');
+  t.select();
+  try{
+    navigator.clipboard.writeText(t.value).then(function(){toast('MDT Decision copied to clipboard');})
+    .catch(function(){document.execCommand('copy');toast('MDT Decision copied to clipboard');});
+  }catch(e){document.execCommand('copy');toast('MDT Decision copied to clipboard');}
+}
 function delEntry(sk,j){
   var s=secByKey(sk),p=DB.patients[detailIdx];
   if(!confirm('Delete this '+s.single+'?'))return;
