@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Patient Data</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0A1118">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
   :root{
     --ink:#E8F0F3; --paper:#0F1923; --card:#172330;
@@ -1325,6 +1330,13 @@ load(function(){
   <button class="login-btn" onclick="doLogin()">Sign in</button>
   <div class="login-err" id="loginErr"></div>
 </div>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+</script>
 
 </body>
 </html>
